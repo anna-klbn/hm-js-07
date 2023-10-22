@@ -21,7 +21,35 @@ function createGalleryItemCardMarkup(galleryItems) {
     }).join('');
 }
 
- 
+function onGalleryItemsContainerClick(evt) {
+  evt.preventDefault();
+    
+  if (evt.target.nodeName !== "IMG") {
+    return;
+  }
+  const originalUrl = evt.target.dataset.source;
 
 
+const options = {
+    onShow: () => {
+      window.addEventListener('keydown', onCloseEsc);
+    },
+    onClose: () => {
+      window.removeEventListener('keydown', onCloseEsc);
+    },
+
+
+  };
+
+  const instance = basicLightbox.create(`<img src=${originalUrl}>`, options);
+        instance.show();
+  function onCloseEsc(event) {
+          
+    if (basicLightbox.visible() && event.key === "Escape") {
+      instance.close();
+    }
+  }
+}
+
+console.log(galleryItems);
 
