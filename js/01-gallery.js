@@ -1,15 +1,13 @@
 import { galleryItems } from './gallery-items.js';
-const galleryItemsContainer = document.querySelector('.gallery');
-const galleryItemsMarkup = createGalleryItemCardMarkup(galleryItems);
+const galleryContainer = document.querySelector('.gallery');
+const cardsMarkup = createGalleryCardMarkup(galleryItems);
 
-galleryItemsContainer.insertAdjacentHTML('afterbegin', galleryItemsMarkup);
-galleryItemsContainer.addEventListener('click', onGalleryItemsContainerClick);
 
-function createGalleryItemCardMarkup(galleryItems) {
 
-    return galleryItems.map(({ preview, original, description }) => {
-        return `<div class="gallery__item">
-  <a class="gallery__link" href="${original}">
+function createGalleryCardMarkup(galleryItems) {
+  return galleryItems.map(({ preview, original, description }) => {
+    return `<li class="gallery__item">
+  <a class="gallery__link" href="large-image.jpg">
     <img
       class="gallery__image"
       src="${preview}"
@@ -17,39 +15,28 @@ function createGalleryItemCardMarkup(galleryItems) {
       alt="${description}"
     />
   </a>
-</div>`;
-    }).join('');
-}
+</li>`
+  }).join('')
+};
 
-function onGalleryItemsContainerClick(evt) {
-  evt.preventDefault();
+galleryContainer.insertAdjacentHTML('beforeend', cardsMarkup);
+galleryContainer.addEventListener('click', onCardContainer);
+
+  function onCardContainer(event) {
+    event.preventDefault();
+    if (event.target.nodeName !== 'IMG') {
+      return;
+    }
+   const instance = basicLightbox.create(`
+    <img src = ${event.target.dataset.source} width="800" height="600">`
+  );
     
-  if (evt.target.nodeName !== "IMG") {
-    return;
-  }
-  const originalUrl = evt.target.dataset.source;
-
-
-const options = {
-    onShow: () => {
-      window.addEventListener('keydown', onCloseEsc);
-    },
-    onClose: () => {
-      window.removeEventListener('keydown', onCloseEsc);
-    },
-
-
-  };
-
-  const instance = basicLightbox.create(`<img src=${originalUrl}>`, options);
-        instance.show();
-  function onCloseEsc(event) {
-          
-    if (basicLightbox.visible() && event.key === "Escape") {
+    const onKeydownEsc = event => {
+    console.log(event.code);
+    if (event.code === 'Escape') {
       instance.close();
     }
-  }
-}
-
-console.log(galleryItems);
-
+  };
+    
+      instance.show();
+};
