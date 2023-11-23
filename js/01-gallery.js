@@ -31,12 +31,16 @@ galleryContainer.addEventListener('click', onCardContainer);
     <img src = ${event.target.dataset.source} width="800" height="600">`
   );
     
+    instance.show();
+    
     const onKeydownEsc = event => {
+  
     console.log(event.code);
     if (event.code === 'Escape') {
       instance.close();
     }
-  };
-    
-      instance.show();
 };
+  
+document.addEventListener('keydown', onKeydownEsc);
+};
+
